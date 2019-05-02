@@ -1,20 +1,19 @@
 #include "encryption.h"
 
 //CAESAR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
-void caesar_cipher(int key, const char* original_text_i, char* processed_text) {
-	unsigned int text_length = strlen(original_text_i);
-	char original_text[text_length];
-	char original_letter;
-	unsigned char encrypted_letter;
-	int  shift_amount = key;
+char* caesarCipher(int key, const char* plainText) {
+	unsigned int textLength = strlen(plainText);
+	char* cipheredText = (char*) malloc(2*textLength*sizeof(char));
+	char plainLetter;
+	unsigned char cipheredLetter;
 
-	strcpy(original_text, original_text_i);
-	for (int i = 0; original_text[i] != '\0'; i++)
+	for (int i = 0; plainText[i] != '\0'; i++)
 	{
-		original_letter = original_text[i];
-		encrypted_letter = shift_letter(original_letter, shift_amount);
-		processed_text[i] = encrypted_letter;
+		plainLetter = plainText[i];
+		cipheredLetter = shift_letter(plainLetter, key);
+		cipheredText[i] = cipheredLetter;
 	}
+	return cipheredText;
 }
 
 //VIGENERE CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
