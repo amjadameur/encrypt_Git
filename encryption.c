@@ -3,7 +3,7 @@
 //CAESAR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
 char* caesar(int key, const char* plainText) {
 	unsigned int textLength = strlen(plainText);
-	char* cipheredText = (char*) malloc(textLength*sizeof(char));
+	char* cipheredText = (char*) malloc((textLength+1)*sizeof(char));
 	char plainLetter;
 	unsigned char cipheredLetter;
 
@@ -16,11 +16,13 @@ char* caesar(int key, const char* plainText) {
 	return cipheredText;
 }
 
+
+
 //VIGENERE CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
 char* vigenere(char* key, char* plainText) {
 	unsigned int keyLength = strlen(key);
 	unsigned int textLength = strlen(plainText);
-	char* cipheredText = (char*) malloc(textLength*sizeof(char));
+	char* cipheredText = (char*) malloc((textLength+1)*sizeof(char));
 	int* intKey = str_to_int(key);
 	char plainLetter;
 	unsigned char cipheredLetter;
@@ -42,33 +44,30 @@ char* vigenere(char* key, char* plainText) {
 }
 
 //ONE TIME PAD CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
-void generate_one_time_pad_key(unsigned int original_text_length, int* one_time_pad_key) {
-	int r;
-	for (int i = 0; i < original_text_length; ++i)
-	{
-		r = rand() % NB_LETTERS;
-		one_time_pad_key[i] = r;
+int* randIntKey(unsigned int keyLength) {
+	int* intKey = (int*) malloc(keyLength*sizeof(int));
+	int randVal;
+	for (int i = 0; i < keyLength; ++i) {
+		randVal = rand() % NB_LETTERS;
+		intKey[i] = randVal;
 	}
+	return intKey;
 }
 
-void one_time_pad_cipher(unsigned int original_text_length, const int* one_time_pad_key_i, const char* original_text_i, char* processed_text) {
-	int key[original_text_length];
-	char original_text[original_text_length];	
-	int shift_amount;
-	char original_letter;
-	unsigned char encrypted_letter; 
+char* oneTimePad(char* plainText, int* key) {
+	unsigned int textLength = strlen(plainText);
+	int shiftAmount;
+	char plainLetter, cipheredLetter;
+	char* cipheredText = (char*) malloc((textLength+1)*sizeof(char));
 
-	//Pre-treatment
-	cpy_int_tab(original_text_length, key, one_time_pad_key_i);
-	strcpy(original_text, original_text_i);
-
-	for (int i = 0; i < original_text_length; ++i)
+	for (int i = 0; i < textLength; ++i)
 	{
-		shift_amount = key[i];
-		original_letter = original_text[i];
-		encrypted_letter = shiftLetter(original_letter, shift_amount);
-		processed_text[i] = encrypted_letter;
+		shiftAmount = key[i];
+		plainLetter = plainText[i];
+		cipheredLetter = shiftLetter(plainLetter, shiftAmount);
+		cipheredText[i] = cipheredLetter;
 	}	
+	return cipheredText;
 }
 
 //PLAYFAIR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////

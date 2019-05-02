@@ -104,11 +104,12 @@ int* str_to_int(char* key) {
 	return intKey;
 }
 
-void indexes_to_str(int tab_size, int* letter_indexes, char* key) {
-	for (int i = 0; i < tab_size; ++i)
-	{
-		key[i] = 'a' + letter_indexes[i];
+char* int_to_str(int nb, int* tab) {
+	char* key = (char*) malloc((nb+1)*sizeof(char));
+	for (int i = 0; i < nb; ++i) {
+		key[i] = 'a' + tab[i];
 	}
+	return key;
 }
 
 

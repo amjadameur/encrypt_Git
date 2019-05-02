@@ -22,7 +22,7 @@ char* vigenere(char* key, char* plainText);
 
 void generate_one_time_pad_key(unsigned int original_text_length, int* one_time_pad_key);
 
-void one_time_pad_cipher(unsigned int original_text_length, const int* one_time_pad_key_i, const char* original_text_i, char* processed_text);
+char* oneTimePad(char* plainText);
 
 void encrypt_playfair_bigraph(int encrypt_decrypt, char playfair_key[][PLAYFAIR_R_C_SIZE], int* bigraph_coordinates_c1, int* bigraph_coordinates_c2, char* encr_c1, char* encr_c2);
 

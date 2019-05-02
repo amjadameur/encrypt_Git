@@ -23,11 +23,11 @@ void cpy_int_tab(int n, int* tab_d, int* tab_s);
 unsigned char shiftLetter(const char original_letter, int shift_amount);
 
 ///////////////////////////////////////////////////////////////////////////////////
-int char_to_Int(char letter);
+int char_to_int(char letter);
 
-int* str_To_Int(char* key);
+int* str_to_int(char* key);
 
-void indexes_to_str(int tab_size, int* letter_indexes, char* key);
+char* int_to_str(int nb, int* tab);
 
 ///Find Char//////////////////////////////////////////////////////////////////////
 int char_in_str(char c, char* s);
