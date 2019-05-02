@@ -1,45 +1,44 @@
 #include "encryption.h"
 
 //CAESAR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
-char* caesarCipher(int key, const char* plainText) {
+char* caesar(int key, const char* plainText) {
 	unsigned int textLength = strlen(plainText);
-	char* cipheredText = (char*) malloc(2*textLength*sizeof(char));
+	char* cipheredText = (char*) malloc(textLength*sizeof(char));
 	char plainLetter;
 	unsigned char cipheredLetter;
 
 	for (int i = 0; plainText[i] != '\0'; i++)
 	{
 		plainLetter = plainText[i];
-		cipheredLetter = shift_letter(plainLetter, key);
+		cipheredLetter = shiftLetter(plainLetter, key);
 		cipheredText[i] = cipheredLetter;
 	}
 	return cipheredText;
 }
 
 //VIGENERE CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
-void vigenere_cipher(int key_length, const int* key_i, const char* original_text_i, char* processed_text) 
-{
-	int key[key_length];
-	unsigned int text_length = strlen(original_text_i);
-	char original_text[text_length];
-	char original_letter;
-	unsigned char encrypted_letter;
-	int shift_amount;
+char* vigenere(char* key, char* plainText) {
+	unsigned int keyLength = strlen(key);
+	unsigned int textLength = strlen(plainText);
+	char* cipheredText = (char*) malloc(textLength*sizeof(char));
+	int* intKey = str_to_int(key);
+	char plainLetter;
+	unsigned char cipheredLetter;
+	int shiftAmount;
 
-	cpy_int_tab(key_length, key, key_i);
-	strcpy(original_text, original_text_i);
-	for (int i = 0; i<text_length; i+=key_length) {
-		for (int j = 0; j<key_length; j++) {
-			if (original_text[i+j] == '\0') {
+	for (int i = 0; i<textLength; i+=keyLength) {
+		for (int j = 0; j<keyLength; j++) {
+			if (plainText[i+j] == '\0') {
 				break;
 			} else {
-				original_letter = original_text[i+j];
-				shift_amount = key[j];
-				encrypted_letter = shift_letter(original_letter, shift_amount);
-				processed_text[i+j] = encrypted_letter;
+				plainLetter = plainText[i+j];
+				shiftAmount = intKey[j];
+				cipheredLetter = shiftLetter(plainLetter, shiftAmount);
+				cipheredText[i+j] = cipheredLetter;
 			}
 		}	
 	}
+	return cipheredText;
 }
 
 //ONE TIME PAD CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +66,7 @@ void one_time_pad_cipher(unsigned int original_text_length, const int* one_time_
 	{
 		shift_amount = key[i];
 		original_letter = original_text[i];
-		encrypted_letter = shift_letter(original_letter, shift_amount);
+		encrypted_letter = shiftLetter(original_letter, shift_amount);
 		processed_text[i] = encrypted_letter;
 	}	
 }

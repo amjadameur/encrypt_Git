@@ -47,7 +47,7 @@ void cpy_int_tab(int n, int* tab_d, int* tab_s) {
 	}
 }
 
-unsigned char shift_letter(const char original_letter, int shift_amount)
+unsigned char shiftLetter(const char original_letter, int shift_amount)
 {
 	unsigned char encrypted_letter = original_letter;
 
@@ -81,7 +81,7 @@ unsigned char shift_letter(const char original_letter, int shift_amount)
 }	
 
 ///////////////////////////////////////////////////////////////////////////////////
-int letter_to_index(char letter) 
+int char_to_int(char letter) 
 {
 	int index = 0;
 	if (letter >= 'a' && letter <= 'z')
@@ -95,11 +95,13 @@ int letter_to_index(char letter)
 	return index;
 }
 
-void str_to_indexes(char* key, int* letter_indexes) {
-	for (int i = 0; key[i] != '\0'; ++i)
-	{
-		letter_indexes[i] = letter_to_index(key[i]);
+int* str_to_int(char* key) {
+	unsigned int keyLength = strlen(key);
+	int* intKey = (int*) malloc(sizeof(int)*keyLength);
+	for (int i = 0; i<keyLength; ++i) {
+		intKey[i] = char_to_int(key[i]);
 	}	
+	return intKey;
 }
 
 void indexes_to_str(int tab_size, int* letter_indexes, char* key) {

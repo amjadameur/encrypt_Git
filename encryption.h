@@ -16,9 +16,9 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-char* caesarCipher(int key, const char* plainText);
+char* caesar(int key, const char* plainText);
 
-void vigenere_cipher(int key_length, const int* key_i, const char* original_text_i, char* processed_text);
+char* vigenere(char* key, char* plainText);
 
 void generate_one_time_pad_key(unsigned int original_text_length, int* one_time_pad_key);
 

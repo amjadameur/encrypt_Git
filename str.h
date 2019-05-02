@@ -20,12 +20,12 @@ void lower_to_uppercase(char* s);
 
 void cpy_int_tab(int n, int* tab_d, int* tab_s);
 
-unsigned char shift_letter(const char original_letter, int shift_amount);
+unsigned char shiftLetter(const char original_letter, int shift_amount);
 
 ///////////////////////////////////////////////////////////////////////////////////
-int letter_to_index(char letter);
+int char_to_Int(char letter);
 
-void str_to_indexes(char* key, int* letter_indexes);
+int* str_To_Int(char* key);
 
 void indexes_to_str(int tab_size, int* letter_indexes, char* key);
 
