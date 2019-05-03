@@ -17,7 +17,6 @@
 #define ENCRYPTION        1
 #define DECRYPTION        2
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 char* caesar(int key, const char* plainText);
 char* caesarEncr(int key, const char* plainText);
@@ -31,10 +30,10 @@ char* oneTimePad(const int* key, const char* plainText);
 char* oneTimePadEncr(int** key, const char* plainText);
 char* oneTimePadDecr(const int* key, const char* cipheredText);
 
-/*
+void playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2);
+//void playfairBigraphEncr(int encryptDecrypt, char** keyMat, int* bigraph_coordinates_c1, int* bigraph_coordinates_c2, char* encr_c1, char* encr_c2);
 
-void encrypt_playfair_bigraph(int encrypt_decrypt, char playfair_key[][PLAYFAIR_R_C_SIZE], int* bigraph_coordinates_c1, int* bigraph_coordinates_c2, char* encr_c1, char* encr_c2);
-char* playfair_cipher(int encrypt_decrypt, const char* key, const char* original_text);
+/*char* playfair_cipher(int encrypt_decrypt, const char* key, const char* original_text);
 char* playfairEncr(const char* key, const char* plainText);
 char* playfairDecr(const char* key, const char* cipheredText);
 

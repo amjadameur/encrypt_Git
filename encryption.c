@@ -100,57 +100,53 @@ char* oneTimePadDecr(const int* key, const char* cipheredText) {
 	return plainText;
 }
 
-/*
-//PLAYFAIR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
-void encrypt_playfair_bigraph(int encrypt_decrypt, char playfair_key[][PLAYFAIR_R_C_SIZE], int* bigraph_coordinates_c1, int* bigraph_coordinates_c2, char* encr_c1, char* encr_c2) {
-	int c1_r = bigraph_coordinates_c1[0];
-	int c1_c = bigraph_coordinates_c1[1];
-	int c2_r = bigraph_coordinates_c2[0];
-	int c2_c = bigraph_coordinates_c2[1];
 
-	if (c1_c == c2_c && c1_r == c2_r) {
-		*encr_c1 = playfair_key[c1_r][c1_c];
-		*encr_c2 = playfair_key[c2_r][c2_c];
-	}
-	else if (c1_r == c2_r) {
-		if (c1_c == PLAYFAIR_R_C_SIZE-1 || encrypt_decrypt == DECRYPTION) {
-			*encr_c1 = playfair_key[c1_r][c1_c-1];
+//PLAYFAIR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
+
+void playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2) {
+	int c1_r, c1_c, c2_r, c2_c;
+	findCharInMat(keyMat, *c1, &c1_r, &c1_c);
+	findCharInMat(keyMat, *c2, &c2_r, &c2_c);
+
+
+	if (c1_r == c2_r) {
+		if (c1_c == FIVE_COLUMNS-1 || encryptDecrypt == DECRYPTION) {
+			*c1 = keyMat[c1_r][c1_c-1];
 		} else {
-			*encr_c1 = playfair_key[c1_r][c1_c+1];
+			*c1 = keyMat[c1_r][c1_c+1];
 		}
 
-		if (c2_c == PLAYFAIR_R_C_SIZE || encrypt_decrypt == DECRYPTION) {
-			*encr_c2 = playfair_key[c2_r][c2_c-1];
+		if (c2_c == FIVE_COLUMNS || encryptDecrypt == DECRYPTION) {
+			*c2 = keyMat[c2_r][c2_c-1];
 		} else {
-			*encr_c2 = playfair_key[c2_r][c2_c+1];
+			*c2 = keyMat[c2_r][c2_c+1];
 		}
 	}
 
 	else if (c1_c == c2_c) {
-		if (c1_r == PLAYFAIR_R_C_SIZE-1 || encrypt_decrypt == DECRYPTION) {
-			*encr_c1 = playfair_key[c1_r-1][c1_c];
+		if (c1_r == FIVE_ROWS-1 || encryptDecrypt == DECRYPTION) {
+			*c1 = keyMat[c1_r-1][c1_c];
 		} else {
-			*encr_c1 = playfair_key[c1_r+1][c1_c];
+			*c1 = keyMat[c1_r+1][c1_c];
 		}
 
-		if (c2_r == PLAYFAIR_R_C_SIZE-1 || encrypt_decrypt == DECRYPTION) {
-			*encr_c2 = playfair_key[c2_r-1][c2_c];
+		if (c2_r == FIVE_ROWS-1 || encryptDecrypt == DECRYPTION) {
+			*c2 = keyMat[c2_r-1][c2_c];
 		} else {
-			*encr_c2 = playfair_key[c2_r+1][c2_c];
+			*c2 = keyMat[c2_r+1][c2_c];
 		}
 
 	} else {
-		*encr_c1 = playfair_key[c1_r][c2_c];
-		*encr_c2 = playfair_key[c2_r][c1_c];
+		*c1 = keyMat[c1_r][c2_c];
+		*c2 = keyMat[c2_r][c1_c];
 	}
 }
+/*
+char* playfair_cipher(int encrypt_decrypt, const char* key, const char* plainText) {
+	unsigned int textLength = strlen(plainText);
+	char *cipheredText = (char*) malloc((textLength+1)*sizeof(char));
+	char **keyMat = keyMatGen(key, 'q');
 
-char* playfair_cipher(int encrypt_decrypt, const char* key_i, const char* original_text_i) {
-	unsigned int textLength = strlen(original_text_i);
-	char* processed_text = (char*) malloc((textLength+1)*sizeof(char));
-	char playfair_key[PLAYFAIR_R_C_SIZE][PLAYFAIR_R_C_SIZE];
-	char original_text[textLength];
-	char key[strlen(key_i)];
 	int i = 0;
 	char to_encr_c1, to_encr_c2;
 	char encr_c1, encr_c2;

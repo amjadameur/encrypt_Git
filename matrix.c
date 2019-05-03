@@ -68,17 +68,17 @@ char** keyMatGen(const char* key, char exceptC) {
 	return keyMatrix;
 }
 
-void char_matrix_coordinates(const char playfair_key[][PLAYFAIR_R_C_SIZE], const char c_to_find, int* c_coordinates) {
-	for (int r = 0; r < PLAYFAIR_R_C_SIZE; ++r) {
-		for (int c = 0; c < PLAYFAIR_R_C_SIZE; ++c)	{
-			if (c_to_find == playfair_key[r][c]) {
-				c_coordinates[0] = r;
-				c_coordinates[1] = c;
-				goto c_found;
+void findCharInMat(const char **mat, char charToFind, int* row, int* col) {
+	*row = 0; *col = 0;
+	for (int r = 0; r < FIVE_ROWS; ++r) {
+		for (int c = 0; c < FIVE_COLUMNS; ++c)	{
+			if (mat[r][c] == charToFind) {
+				*row = r;
+				*col = c;
+				return;
 			}
 		}
 	}
-	c_found:;
 }
 
 
