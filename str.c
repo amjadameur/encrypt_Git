@@ -10,19 +10,6 @@ int* alter_tab_sign(int n, const int* tab) {
 	return alteredTab;
 }
 
-int next_char(int index, char* s) {
-	unsigned int s_length = strlen(s);
-	char next_c;
-	for (int i = index+1; i < s_length; ++i)
-	{
-		next_c = s[i];
-		if (next_c != ' ') {
-			return (char_in_alphabets(next_c)) ? i : 0;
-		}
-	}
-	return 0;
-}
-
 char upperC(char c) {
 	return (c >= 'a' && c <= 'z') ? c-LOWER_UPPERCASE_OFFSET : c;
 }
@@ -146,25 +133,6 @@ char* removeDuplicates(const char* strIn) {
 	strOut[strOutLength]='\0'; 	
 	strOut = (char*) realloc(strOut, (strOutLength+1)*sizeof(char)); 	
 	return strOut;
-}
-
-char pick_from_alphabets(char* offset, char* s, char except_c) {
-	char picked_char = *offset;
-	for (picked_char = *offset; picked_char < 'Z'+1; ++picked_char){
-		if (!char_in_str(picked_char, s) && picked_char != except_c)
-		{
-			*offset = picked_char+1; 
-			break;
-		}
-	}
-	return picked_char;
-}
-
-void fill_blank_space(int start_index, int stop_index, char* processed_text) {
-	for (int i = start_index; i < stop_index+1; ++i)
-	{
-		processed_text[i] = ' ';
-	}
 }
 
 int* randIntKey(unsigned int keyLength) {

@@ -30,13 +30,12 @@ char* oneTimePad(const int* key, const char* plainText);
 char* oneTimePadEncr(int** key, const char* plainText);
 char* oneTimePadDecr(const int* key, const char* cipheredText);
 
-void playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2);
-//void playfairBigraphEncr(int encryptDecrypt, char** keyMat, int* bigraph_coordinates_c1, int* bigraph_coordinates_c2, char* encr_c1, char* encr_c2);
-
-/*char* playfair_cipher(int encrypt_decrypt, const char* key, const char* original_text);
+void  playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2);
+char* playfairCipher(int encryptDecrypt, const char* key, const char* plainText);
 char* playfairEncr(const char* key, const char* plainText);
 char* playfairDecr(const char* key, const char* cipheredText);
 
+/*
 void four_square_encrypt_bigraph(int encrypt_decrypt, char alphabet_matrix[][PLAYFAIR_R_C_SIZE], char key1[][PLAYFAIR_R_C_SIZE], char key2[][PLAYFAIR_R_C_SIZE], char* c1, char* c2);
 void four_square_cipher(int encrypt_decrypt, const char* key1_i, const char* key2_i, const char* original_text_i, char* processed_text, char except_c);
 

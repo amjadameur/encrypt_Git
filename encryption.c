@@ -104,10 +104,14 @@ char* oneTimePadDecr(const int* key, const char* cipheredText) {
 //PLAYFAIR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
 
 void playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2) {
+	// upperCase
+	*c1 = upperC(*c1);
+	*c2 = upperC(*c2);
+	
+	// coordinates of the c1 and c2 in the matrix
 	int c1_r, c1_c, c2_r, c2_c;
 	findCharInMat(keyMat, *c1, &c1_r, &c1_c);
 	findCharInMat(keyMat, *c2, &c2_r, &c2_c);
-
 
 	if (c1_r == c2_r) {
 		if (c1_c == FIVE_COLUMNS-1 || encryptDecrypt == DECRYPTION) {
@@ -116,7 +120,7 @@ void playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2) 
 			*c1 = keyMat[c1_r][c1_c+1];
 		}
 
-		if (c2_c == FIVE_COLUMNS || encryptDecrypt == DECRYPTION) {
+		if (c2_c == FIVE_COLUMNS-1 || encryptDecrypt == DECRYPTION) {
 			*c2 = keyMat[c2_r][c2_c-1];
 		} else {
 			*c2 = keyMat[c2_r][c2_c+1];
@@ -141,49 +145,40 @@ void playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2) 
 		*c2 = keyMat[c2_r][c1_c];
 	}
 }
-/*
-char* playfair_cipher(int encrypt_decrypt, const char* key, const char* plainText) {
+
+char* playfairCipher(int encryptDecrypt, const char* key, const char* plainText) {
 	unsigned int textLength = strlen(plainText);
 	char *cipheredText = (char*) malloc((textLength+1)*sizeof(char));
 	char **keyMat = keyMatGen(key, 'q');
-
-	int i = 0;
-	char to_encr_c1, to_encr_c2;
-	char encr_c1, encr_c2;
-	int to_encr_c2_index;
-	int bigraph_coordinates_c1[BIGRAPH_SIZE];
-	int bigraph_coordinates_c2[BIGRAPH_SIZE];
-
-    // pre-treatment
-	strcpy(original_text, original_text_i);
-	strcpy(key, key_i);
-	matrix_key_generator(key, playfair_key, 'Q');
-	lower_to_uppercase(original_text);
+	char c1 = '0', c2 = '0'; 
+	int i = 0, j = 0;
 
 	while(i<textLength) {
-		to_encr_c1 = original_text[i];
-		to_encr_c2_index = next_char(i, original_text);
-		if(!char_in_alphabets(to_encr_c1) || !to_encr_c2_index) {
-			processed_text[i] = original_text[i];
-			i++;
+		c1 = plainText[i];
+		if (!char_in_alphabets(c1)) {
+			cipheredText[i++] = c1;
 		} else {
-			to_encr_c2 = original_text[to_encr_c2_index];
-			char_matrix_coordinates(playfair_key, to_encr_c1, bigraph_coordinates_c1);
-			char_matrix_coordinates(playfair_key, to_encr_c2, bigraph_coordinates_c2);
-			encrypt_playfair_bigraph(encrypt_decrypt, playfair_key, bigraph_coordinates_c1, bigraph_coordinates_c2, &encr_c1, &encr_c2); 
-			fill_blank_space(i+1, to_encr_c2_index-1, processed_text);
-			processed_text[to_encr_c2_index] = encr_c2;
-			processed_text[i]                = encr_c1;
-			i = to_encr_c2_index+1;
+			j = i++; // j stocke l'indice de c1
+			while(!char_in_alphabets(c2 = plainText[i])) cipheredText[i++] = c2;
+			playfairBigraphEncr(encryptDecrypt, keyMat, &c1, &c2);
+			cipheredText[j] = c1;
+			cipheredText[i++] = c2;
 		}
 	}
-	return processed_text;
+	free(keyMat);
+	return cipheredText;	
 }
 
 char* playfairEncr(const char* key, const char* plainText) {
-
+	return playfairCipher(ENCRYPTION, key, plainText);
 }
 
+char* playfairDecr(const char* key, const char* cipheredText) {
+	return playfairCipher(DECRYPTION, key, cipheredText);
+}
+
+
+/*
 //FOUR SQUARE CIPHER////////////////////////////////////////////////////////////////////////////////////////////////
 void four_square_encrypt_bigraph(int encrypt_decrypt, char alphabet_matrix[][PLAYFAIR_R_C_SIZE], char key1[][PLAYFAIR_R_C_SIZE], char key2[][PLAYFAIR_R_C_SIZE], char* c1, char* c2) {	
 	int bigraph_coordinates_c1[BIGRAPH_SIZE];

@@ -17,8 +17,6 @@ typedef enum {false, true} bool;
 ///Basic functions//////////////////////////////////////////////////////////////////
 int* alter_tab_sign(int n, const int* tab);
 
-int next_char(int index, char* s);
-
 char upperC(char c);
 char lowerC(char c);
 
@@ -42,11 +40,6 @@ bool char_in_alphabets(char c);
 
 /////////////////////////////////////////////////////////////////////////////////////
 char* removeDuplicates(const char* strIn);
-
-char pick_from_alphabets(char* offset, char* s, char except_c);
-
-void fill_blank_space(int start_index, int stop_index, char* processed_text);
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 int* randIntKey(unsigned int keyLength);
