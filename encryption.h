@@ -1,3 +1,6 @@
+#ifndef ENCRYPTION_H
+#define ENCRYPTION_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,25 +27,21 @@ char* vigenere(unsigned int keyLength, const int* key, const char* plainText);
 char* vigenereEncr(const char* key, const char* plainText);
 char* vigenereDecr(const char* key, const char* cipheredText);
 
-
 char* oneTimePad(const int* key, const char* plainText);
 char* oneTimePadEncr(int** key, const char* plainText);
-char* oneTimePadDecr(const int* key, const char* plainText);
+char* oneTimePadDecr(const int* key, const char* cipheredText);
 
+/*
 
 void encrypt_playfair_bigraph(int encrypt_decrypt, char playfair_key[][PLAYFAIR_R_C_SIZE], int* bigraph_coordinates_c1, int* bigraph_coordinates_c2, char* encr_c1, char* encr_c2);
-
-
-
-
-
-
-void playfair_cipher(int encrypt_decrypt, const char* key, const char* original_text, char* processed_text);
+char* playfair_cipher(int encrypt_decrypt, const char* key, const char* original_text);
+char* playfairEncr(const char* key, const char* plainText);
+char* playfairDecr(const char* key, const char* cipheredText);
 
 void four_square_encrypt_bigraph(int encrypt_decrypt, char alphabet_matrix[][PLAYFAIR_R_C_SIZE], char key1[][PLAYFAIR_R_C_SIZE], char key2[][PLAYFAIR_R_C_SIZE], char* c1, char* c2);
-
 void four_square_cipher(int encrypt_decrypt, const char* key1_i, const char* key2_i, const char* original_text_i, char* processed_text, char except_c);
 
 void two_square_encrypt_bigraph(char key1[][PLAYFAIR_R_C_SIZE], char key2[][PLAYFAIR_R_C_SIZE], char* c1, char* c2);
-
 void two_square_cipher(const char* key1_i, const char* key2_i, const char* original_text_i, char* processed_text, char except_c);
+*/
+#endif

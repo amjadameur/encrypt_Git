@@ -3,38 +3,36 @@
 #include "encryption.h"
 
 
-void func(int**tab) {
-	//printf("addr tab : %p\n", tab);
 
-	*tab = (int*) malloc(sizeof(int));
-
-	//printf("addr tab : %p\n", tab);
-
-}
 
 void test(void) {
-	int* tab;
-	printf("addr tab : %p\n", tab);
-	func(&tab);
+	char **keyMat = keyMatGen("hello world", 'q');
+	showMat(5, 5, keyMat);
+	freeMat(5, keyMat);
 
-	printf("addr tab : %p\n", tab);
-
-	free(tab);	
 }
 
 int main(int argc, char const *argv[])
 {
-	char* plainText = "amjad";
-	int* key;
+	char* plainText = "hide the gold";
+/*	int* key;
 
 	char * cipheredText  = oneTimePadEncr(&key, plainText);
 	char * decryptedText = oneTimePadDecr(key, cipheredText);
 	
 	printf("%s\n", cipheredText);
 	printf("%s\n", decryptedText);
-
-
-
-	//test();
+*/
+/*	char* key = "hello world";
+	char* cipheredText;
+	char* decryptedText;
+	cipheredText  = playfair_cipher(ENCRYPTION, key, plainText);
+	decryptedText = playfair_cipher(DECRYPTION, key, cipheredText);
+	
+	printf("%s\n", plainText);
+	printf("%s\n", cipheredText);
+	printf("%s\n", decryptedText);
+*/
+	test();
 	return 0;
 }

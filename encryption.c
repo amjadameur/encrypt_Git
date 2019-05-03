@@ -91,16 +91,16 @@ char* oneTimePadEncr(int** key, const char* plainText) {
 	return oneTimePad(*key, plainText);
 }
 
-char* oneTimePadDecr(const int* key, const char* plainText) {
+char* oneTimePadDecr(const int* key, const char* cipheredText) {
 	// the key has the same length as the plainText
-	unsigned int keyLength = strlen(plainText);
+	unsigned int keyLength = strlen(cipheredText);
 	int* decrKey = alter_tab_sign(keyLength, key);
-	char* cipheredText =  oneTimePad(decrKey, plainText);
+	char* plainText =  oneTimePad(decrKey, plainText);
 	free(decrKey);
-	return cipheredText;
+	return plainText;
 }
 
-
+/*
 //PLAYFAIR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
 void encrypt_playfair_bigraph(int encrypt_decrypt, char playfair_key[][PLAYFAIR_R_C_SIZE], int* bigraph_coordinates_c1, int* bigraph_coordinates_c2, char* encr_c1, char* encr_c2) {
 	int c1_r = bigraph_coordinates_c1[0];
@@ -145,10 +145,11 @@ void encrypt_playfair_bigraph(int encrypt_decrypt, char playfair_key[][PLAYFAIR_
 	}
 }
 
-void playfair_cipher(int encrypt_decrypt, const char* key_i, const char* original_text_i, char* processed_text) {
+char* playfair_cipher(int encrypt_decrypt, const char* key_i, const char* original_text_i) {
+	unsigned int textLength = strlen(original_text_i);
+	char* processed_text = (char*) malloc((textLength+1)*sizeof(char));
 	char playfair_key[PLAYFAIR_R_C_SIZE][PLAYFAIR_R_C_SIZE];
-	unsigned int original_text_length = strlen(original_text_i);
-	char original_text[original_text_length];
+	char original_text[textLength];
 	char key[strlen(key_i)];
 	int i = 0;
 	char to_encr_c1, to_encr_c2;
@@ -163,7 +164,7 @@ void playfair_cipher(int encrypt_decrypt, const char* key_i, const char* origina
 	matrix_key_generator(key, playfair_key, 'Q');
 	lower_to_uppercase(original_text);
 
-	while(i<original_text_length) {
+	while(i<textLength) {
 		to_encr_c1 = original_text[i];
 		to_encr_c2_index = next_char(i, original_text);
 		if(!char_in_alphabets(to_encr_c1) || !to_encr_c2_index) {
@@ -180,6 +181,11 @@ void playfair_cipher(int encrypt_decrypt, const char* key_i, const char* origina
 			i = to_encr_c2_index+1;
 		}
 	}
+	return processed_text;
+}
+
+char* playfairEncr(const char* key, const char* plainText) {
+
 }
 
 //FOUR SQUARE CIPHER////////////////////////////////////////////////////////////////////////////////////////////////
@@ -294,3 +300,4 @@ void two_square_cipher(const char* key1_i, const char* key2_i, const char* origi
 		}
 	}
 }
+*/

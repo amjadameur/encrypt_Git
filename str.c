@@ -23,23 +23,21 @@ int next_char(int index, char* s) {
 	return 0;
 }
 
-char char_lower_to_uppercase(char c) {
-	char upper_c;
-	if (c >= 'a' && c <= 'z')	{
-		upper_c = c-LOWER_UPPERCASE_OFFSET;
-	}
-	return upper_c;
-	
+char upperC(char c) {
+	return (c >= 'a' && c <= 'z') ? c-LOWER_UPPERCASE_OFFSET : c;
 }
 
-void lower_to_uppercase(char* s) {
-	unsigned int s_length = strlen(s);
-	for (int i = 0; i < s_length; ++i)
-	{
-		if (s[i] >= 'a' && s[i] <= 'z')	{
-			s[i] -= LOWER_UPPERCASE_OFFSET;
-		}
+char lowerC(char c) {
+	return (c >= 'A' && c <= 'A') ? c+LOWER_UPPERCASE_OFFSET : c;
+}
+
+char* upperStr(char* strIn) {
+	unsigned int strLength = strlen(strIn);
+	char *strOut = (char*) malloc((strLength+1)*sizeof(char));
+	for (int i = 0; i < strLength; ++i)	{
+		strOut[i] = upperC(strIn[i]);
 	}
+	return strOut;
 }
 
 void cpy_int_tab(int n, int* tab_d, int* tab_s) {
@@ -116,44 +114,38 @@ char* int_to_str(int nb, const int* tab) {
 
 
 ///Find Char//////////////////////////////////////////////////////////////////////
-int char_in_str(char c, char* s) {
+bool char_in_str(char c, char* s) {
 	unsigned int s_length = strlen(s);
 	for (int i = 0; i < s_length; ++i)
 	{
 		if(s[i] == c) {
-			return 1;
+			return true;
 			break;
 		}
 	}
-	return 0;
+	return false;
 }
 
-int char_in_alphabets(char c) {
-	int c_in_alphab = 0;
-	char alphab;
-	for (alphab = 'A'; alphab < 'Z'+1; ++alphab) {
-		if (alphab == c) {
-			c_in_alphab = 1;
-			break;
-		}
-	}
-	return c_in_alphab;
+bool char_in_alphabets(char c) {
+	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
-void remove_duplicates(const char* key_i, char* key_o) {
-	unsigned int key_length = strlen(key_i);
-	char current_c;
-	int key_o_length = 0;
-
-	key_o[0] = '\0';
-	for (int i = 0; i < key_length; ++i) {
-		current_c = key_i[i];
-		if (char_in_alphabets(current_c) && !char_in_str(current_c, key_o)) {
-			key_o[key_o_length++] = key_i[i];
+char* removeDuplicates(const char* strIn) {
+	unsigned int strInLength = strlen(strIn);
+	char currentC;
+	unsigned int strOutLength = 0;
+	char *strOut = (char*) malloc((strInLength+1)*sizeof(char));
+	strOut[0] = '\0';
+	for (int i = 0; i < strInLength; ++i) {
+		currentC = strIn[i];
+		if (char_in_alphabets(currentC) && !char_in_str(currentC, strOut)) {
+			strOut[strOutLength++] = strIn[i];
 		}
 	}
-	key_o[key_o_length]='\0';
+	strOut[strOutLength]='\0'; 	
+	strOut = (char*) realloc(strOut, (strOutLength+1)*sizeof(char)); 	
+	return strOut;
 }
 
 char pick_from_alphabets(char* offset, char* s, char except_c) {

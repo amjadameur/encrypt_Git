@@ -1,6 +1,11 @@
+#ifndef STR_H
+#define STR_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef enum {false, true} bool;
 
 #define MAX_STR 10000
 #define LOWER_UPPERCASE_OFFSET 32
@@ -14,9 +19,10 @@ int* alter_tab_sign(int n, const int* tab);
 
 int next_char(int index, char* s);
 
-char char_lower_to_uppercase(char c);
+char upperC(char c);
+char lowerC(char c);
 
-void lower_to_uppercase(char* s);
+char* upperStr(char* strIn);
 
 void cpy_int_tab(int n, int* tab_d, int* tab_s);
 
@@ -30,16 +36,19 @@ int* str_to_int(const char* key);
 char* int_to_str(int nb, const int* tab);
 
 ///Find Char//////////////////////////////////////////////////////////////////////
-int char_in_str(char c, char* s);
+bool char_in_str(char c, char* s);
 
-int char_in_alphabets(char c);
+bool char_in_alphabets(char c);
 
 /////////////////////////////////////////////////////////////////////////////////////
-void remove_duplicates(const char* key_i, char* key_o);
+char* removeDuplicates(const char* strIn);
 
 char pick_from_alphabets(char* offset, char* s, char except_c);
 
 void fill_blank_space(int start_index, int stop_index, char* processed_text);
 
+
 ////////////////////////////////////////////////////////////////////////////////////////
 int* randIntKey(unsigned int keyLength);
+
+#endif
