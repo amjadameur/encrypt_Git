@@ -10,7 +10,7 @@
 #define BIGRAPH_SIZE      2
 
 ///Basic functions//////////////////////////////////////////////////////////////////
-void alter_tab_sign(int n, int* tab);
+int* alter_tab_sign(int n, const int* tab);
 
 int next_char(int index, char* s);
 
@@ -25,9 +25,9 @@ unsigned char shiftLetter(const char original_letter, int shift_amount);
 ///////////////////////////////////////////////////////////////////////////////////
 int char_to_int(char letter);
 
-int* str_to_int(char* key);
+int* str_to_int(const char* key);
 
-char* int_to_str(int nb, int* tab);
+char* int_to_str(int nb, const int* tab);
 
 ///Find Char//////////////////////////////////////////////////////////////////////
 int char_in_str(char c, char* s);
@@ -40,3 +40,6 @@ void remove_duplicates(const char* key_i, char* key_o);
 char pick_from_alphabets(char* offset, char* s, char except_c);
 
 void fill_blank_space(int start_index, int stop_index, char* processed_text);
+
+////////////////////////////////////////////////////////////////////////////////////////
+int* randIntKey(unsigned int keyLength);

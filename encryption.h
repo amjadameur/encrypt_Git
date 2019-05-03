@@ -17,12 +17,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 char* caesar(int key, const char* plainText);
+char* caesarEncr(int key, const char* plainText);
+char* caesarDecr(int key, const char* cipheredText);
 
-char* vigenere(char* key, char* plainText);
+char* vigenere(unsigned int keyLength, const int* key, const char* plainText);
+char* vigenereEncr(const char* key, const char* plainText);
+char* vigenereDecr(const char* key, const char* cipheredText);
 
-void generate_one_time_pad_key(unsigned int original_text_length, int* one_time_pad_key);
 
-char* oneTimePad(char* plainText);
+char* oneTimePad(const int* key, const char* plainText);
+char* oneTimePadEncr(int** key, const char* plainText);
+char* oneTimePadDecr(const int* key, const char* plainText);
+
 
 void encrypt_playfair_bigraph(int encrypt_decrypt, char playfair_key[][PLAYFAIR_R_C_SIZE], int* bigraph_coordinates_c1, int* bigraph_coordinates_c2, char* encr_c1, char* encr_c2);
 

@@ -16,14 +16,19 @@ char* caesar(int key, const char* plainText) {
 	return cipheredText;
 }
 
+char* caesarEncr(int key, const char* plainText) {
+	return caesar(key, plainText);
+}
+
+char* caesarDecr(int key, const char* cipheredText) {
+	return caesar(-key, cipheredText);
+}
 
 
 //VIGENERE CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
-char* vigenere(char* key, char* plainText) {
-	unsigned int keyLength = strlen(key);
+char* vigenere(unsigned int keyLength, const int* Key, const char* plainText) {
 	unsigned int textLength = strlen(plainText);
 	char* cipheredText = (char*) malloc((textLength+1)*sizeof(char));
-	int* intKey = str_to_int(key);
 	char plainLetter;
 	unsigned char cipheredLetter;
 	int shiftAmount;
@@ -34,7 +39,7 @@ char* vigenere(char* key, char* plainText) {
 				break;
 			} else {
 				plainLetter = plainText[i+j];
-				shiftAmount = intKey[j];
+				shiftAmount = Key[j];
 				cipheredLetter = shiftLetter(plainLetter, shiftAmount);
 				cipheredText[i+j] = cipheredLetter;
 			}
@@ -43,18 +48,27 @@ char* vigenere(char* key, char* plainText) {
 	return cipheredText;
 }
 
-//ONE TIME PAD CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
-int* randIntKey(unsigned int keyLength) {
-	int* intKey = (int*) malloc(keyLength*sizeof(int));
-	int randVal;
-	for (int i = 0; i < keyLength; ++i) {
-		randVal = rand() % NB_LETTERS;
-		intKey[i] = randVal;
-	}
-	return intKey;
+char* vigenereEncr(const char* key, const char* plainText) {
+	int* intKey = str_to_int(key);
+	unsigned int keyLength = strlen(key);
+	return vigenere(keyLength, intKey, plainText);
 }
 
-char* oneTimePad(char* plainText, int* key) {
+char* vigenereDecr(const char* key, const char* cipheredText) {
+	unsigned int keyLength = strlen(key);
+	int *p, *intKey;
+	intKey = str_to_int(key);
+	p      = intKey;
+	intKey = alter_tab_sign(keyLength, intKey);
+	free(p); // clearing the allocated are allocated by str_to_int
+	return vigenere(keyLength, intKey, cipheredText);
+}
+
+
+//ONE TIME PAD CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+char* oneTimePad(const int* key, const char* plainText) {
 	unsigned int textLength = strlen(plainText);
 	int shiftAmount;
 	char plainLetter, cipheredLetter;
@@ -69,6 +83,23 @@ char* oneTimePad(char* plainText, int* key) {
 	}	
 	return cipheredText;
 }
+
+char* oneTimePadEncr(int** key, const char* plainText) {
+	// the key has the same length as the plainText
+	unsigned int keyLength = strlen(plainText);
+	*key = randIntKey(keyLength);
+	return oneTimePad(*key, plainText);
+}
+
+char* oneTimePadDecr(const int* key, const char* plainText) {
+	// the key has the same length as the plainText
+	unsigned int keyLength = strlen(plainText);
+	int* decrKey = alter_tab_sign(keyLength, key);
+	char* cipheredText =  oneTimePad(decrKey, plainText);
+	free(decrKey);
+	return cipheredText;
+}
+
 
 //PLAYFAIR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
 void encrypt_playfair_bigraph(int encrypt_decrypt, char playfair_key[][PLAYFAIR_R_C_SIZE], int* bigraph_coordinates_c1, int* bigraph_coordinates_c2, char* encr_c1, char* encr_c2) {

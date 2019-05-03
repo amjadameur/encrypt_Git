@@ -1,11 +1,13 @@
 #include "str.h"
 
 ///Basic functions//////////////////////////////////////////////////////////////////
-void alter_tab_sign(int n, int* tab) {
+int* alter_tab_sign(int n, const int* tab) {
+	int* alteredTab = (int*) malloc(sizeof(int));
 	for (int i = 0; i < n; ++i)
 	{
-		tab[i] = -tab[i];
+		alteredTab[i] = -tab[i];
 	}
+	return alteredTab;
 }
 
 int next_char(int index, char* s) {
@@ -95,7 +97,7 @@ int char_to_int(char letter)
 	return index;
 }
 
-int* str_to_int(char* key) {
+int* str_to_int(const char* key) {
 	unsigned int keyLength = strlen(key);
 	int* intKey = (int*) malloc(sizeof(int)*keyLength);
 	for (int i = 0; i<keyLength; ++i) {
@@ -104,7 +106,7 @@ int* str_to_int(char* key) {
 	return intKey;
 }
 
-char* int_to_str(int nb, int* tab) {
+char* int_to_str(int nb, const int* tab) {
 	char* key = (char*) malloc((nb+1)*sizeof(char));
 	for (int i = 0; i < nb; ++i) {
 		key[i] = 'a' + tab[i];
@@ -173,3 +175,12 @@ void fill_blank_space(int start_index, int stop_index, char* processed_text) {
 	}
 }
 
+int* randIntKey(unsigned int keyLength) {
+	int* intKey = (int*) malloc(keyLength*sizeof(int));
+	int randVal;
+	for (int i = 0; i < keyLength; ++i) {
+		randVal = rand() % NB_LETTERS;
+		intKey[i] = randVal;
+	}
+	return intKey;
+}
