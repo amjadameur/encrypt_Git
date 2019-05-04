@@ -1,45 +1,50 @@
-#ifndef ENCRYPTION_H
-#define ENCRYPTION_H
+#ifndef __ENCRYPTION_H__
+#define __ENCRYPTION_H__
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "str.h"
 #include "matrix.h"
 
-#define MAX_STR 10000
-#define LOWER_UPPERCASE_OFFSET 32
-#define NB_LETTERS        26
-#define PLAYFAIR_R_C_SIZE 5
-#define PLAYFAIR_SIZE     25
-#define BIGRAPH_SIZE      2
 #define ENCRYPTION        1
 #define DECRYPTION        2
 
+typedef struct twoKeys {
+	char** keyMat1;
+	char** keyMat2;
+} key2Matrices;
+
+typedef struct threeKeys {
+	char** alphabMat;
+	char** keyMat1;
+	char** keyMat2;
+} key3Matrices;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-char* caesar(int key, const char* plainText);
-char* caesarEncr(int key, const char* plainText);
-char* caesarDecr(int key, const char* cipheredText);
+char*   caesar(int key, const char* plainText);
+char*   caesarEncr(int key, const char* plainText);
+char*   caesarDecr(int key, const char* cipheredText);
 
-char* vigenere(unsigned int keyLength, const int* key, const char* plainText);
-char* vigenereEncr(const char* key, const char* plainText);
-char* vigenereDecr(const char* key, const char* cipheredText);
+char*   vigenere(unsigned int keyLength, const int* key, const char* plainText);
+char*   vigenereEncr(const char* key, const char* plainText);
+char*   vigenereDecr(const char* key, const char* cipheredText);
 
-char* oneTimePad(const int* key, const char* plainText);
-char* oneTimePadEncr(int** key, const char* plainText);
-char* oneTimePadDecr(const int* key, const char* cipheredText);
+char*   oneTimePad(const int* key, const char* plainText);
+char*   oneTimePadEncr(int** key, const char* plainText);
+char*   oneTimePadDecr(const int* key, const char* cipheredText);
 
-void  playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2);
-char* playfairCipher(int encryptDecrypt, const char* key, const char* plainText);
-char* playfairEncr(const char* key, const char* plainText);
-char* playfairDecr(const char* key, const char* cipheredText);
+void    playfairDigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2);
+char*   playfair(int encryptDecrypt, const char* key, const char* plainText);
+char*   playfairEncr(const char* key, const char* plainText);
+char*   playfairDecr(const char* key, const char* cipheredText);
 
-/*
-void four_square_encrypt_bigraph(int encrypt_decrypt, char alphabet_matrix[][PLAYFAIR_R_C_SIZE], char key1[][PLAYFAIR_R_C_SIZE], char key2[][PLAYFAIR_R_C_SIZE], char* c1, char* c2);
-void four_square_cipher(int encrypt_decrypt, const char* key1_i, const char* key2_i, const char* original_text_i, char* processed_text, char except_c);
+void    fourSquareDigraphEncr(key3Matrices keys, char *c1, char *c2);
+void    fourSquareDigraphDecr(key3Matrices keys, char *c1, char *c2);
+char*   fourSquare(int encryptDecrypt, const char* key1, const char* key2, const char* plainText);	
+char*   fourSquareEncr(const char* key1, const char* key2, const char* plainText);	
+char*   fourSquareDecr(const char* key1, const char* key2, const char* cipheredText);	
 
-void two_square_encrypt_bigraph(char key1[][PLAYFAIR_R_C_SIZE], char key2[][PLAYFAIR_R_C_SIZE], char* c1, char* c2);
-void two_square_cipher(const char* key1_i, const char* key2_i, const char* original_text_i, char* processed_text, char except_c);
-*/
+// Ici on utilise la version verticale de cette méthode de cryptage
+void    twoSquareDigraphEncr(key2Matrices keys, char *c1, char *c2);
+char*   twoSquare(const char* key1, const char* key2, const char* plainText);	
+char*   twoSquareEncr(const char* key1, const char* key2, const char* plainText);	
+char*   twoSquareDecr(const char* key1, const char* key2, const char* cipheredText);	
+
 #endif

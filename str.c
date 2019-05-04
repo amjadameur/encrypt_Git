@@ -10,6 +10,13 @@ int* alter_tab_sign(int n, const int* tab) {
 	return alteredTab;
 }
 
+void cpy_int_tab(int n, int* tab_d, int* tab_s) {
+	for (int i = 0; i < n; ++i)
+	{
+		tab_d[i] = tab_s[i];
+	}
+}
+
 char upperC(char c) {
 	return (c >= 'a' && c <= 'z') ? c-LOWER_UPPERCASE_OFFSET : c;
 }
@@ -27,45 +34,15 @@ char* upperStr(char* strIn) {
 	return strOut;
 }
 
-void cpy_int_tab(int n, int* tab_d, int* tab_s) {
-	for (int i = 0; i < n; ++i)
-	{
-		tab_d[i] = tab_s[i];
+char* lowerStr(char* strIn) {
+	unsigned int strLength = strlen(strIn);
+	char *strOut = (char*) malloc((strLength+1)*sizeof(char));
+	for (int i = 0; i < strLength; ++i)	{
+		strOut[i] = lowerC(strIn[i]);
 	}
+	return strOut;
 }
 
-unsigned char shiftLetter(const char original_letter, int shift_amount)
-{
-	unsigned char encrypted_letter = original_letter;
-
-	if (encrypted_letter >= 'a' && encrypted_letter <= 'z')
-	{
-		encrypted_letter += shift_amount;
-		
-		if (encrypted_letter > 'z') {
-			encrypted_letter = 'a' + (encrypted_letter - 'z' - 1);
-		}
-
-		else if (encrypted_letter < 'a') {
-			encrypted_letter = 'z' - ('a' - encrypted_letter - 1); 
-		}
-	}
-
-	else if (encrypted_letter >= 'A' && encrypted_letter <= 'Z')
-	{
-		encrypted_letter += shift_amount;
-		
-		if (encrypted_letter > 'Z') {
-			encrypted_letter = 'A' + (encrypted_letter - 'Z' - 1);
-		}
-
-		else if (encrypted_letter < 'A') {
-			encrypted_letter = 'Z' - ('A' - encrypted_letter - 1); 
-		}
-	}
-
-	return encrypted_letter;
-}	
 
 ///////////////////////////////////////////////////////////////////////////////////
 int char_to_int(char letter) 
@@ -113,7 +90,7 @@ bool char_in_str(char c, char* s) {
 	return false;
 }
 
-bool char_in_alphabets(char c) {
+bool isAlphabet(char c) {
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
 }
 
@@ -126,7 +103,7 @@ char* removeDuplicates(const char* strIn) {
 	strOut[0] = '\0';
 	for (int i = 0; i < strInLength; ++i) {
 		currentC = strIn[i];
-		if (char_in_alphabets(currentC) && !char_in_str(currentC, strOut)) {
+		if (isAlphabet(currentC) && !char_in_str(currentC, strOut)) {
 			strOut[strOutLength++] = strIn[i];
 		}
 	}
@@ -144,3 +121,27 @@ int* randIntKey(unsigned int keyLength) {
 	}
 	return intKey;
 }
+
+char shiftLetter(int shiftAmount, char cToShift)
+{
+	bool isLowerCase = false;
+	if (!isAlphabet(cToShift)) return cToShift;
+	
+	// on fait l'opération en upper case
+	if (cToShift >= 'a' && cToShift <= 'a') {
+		isLowerCase = true;
+		cToShift = upperC(cToShift);
+	}
+
+	cToShift += shiftAmount;
+
+	if (cToShift > 'Z') {
+		cToShift = 'A' + (cToShift - 'Z' - 1);
+	}
+
+	else if (cToShift < 'A') {
+		cToShift = 'Z' - ('A' - cToShift - 1); 
+	}
+	
+	return (isLowerCase == true) ? lowerC(cToShift) : cToShift;
+}	

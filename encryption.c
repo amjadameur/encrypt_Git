@@ -1,6 +1,6 @@
 #include "encryption.h"
 
-//CAESAR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 char* caesar(int key, const char* plainText) {
 	unsigned int textLength = strlen(plainText);
 	char* cipheredText = (char*) malloc((textLength+1)*sizeof(char));
@@ -10,7 +10,7 @@ char* caesar(int key, const char* plainText) {
 	for (int i = 0; plainText[i] != '\0'; i++)
 	{
 		plainLetter = plainText[i];
-		cipheredLetter = shiftLetter(plainLetter, key);
+		cipheredLetter  = shiftLetter(key, plainLetter);
 		cipheredText[i] = cipheredLetter;
 	}
 	return cipheredText;
@@ -25,7 +25,7 @@ char* caesarDecr(int key, const char* cipheredText) {
 }
 
 
-//VIGENERE CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 char* vigenere(unsigned int keyLength, const int* Key, const char* plainText) {
 	unsigned int textLength = strlen(plainText);
 	char* cipheredText = (char*) malloc((textLength+1)*sizeof(char));
@@ -40,7 +40,7 @@ char* vigenere(unsigned int keyLength, const int* Key, const char* plainText) {
 			} else {
 				plainLetter = plainText[i+j];
 				shiftAmount = Key[j];
-				cipheredLetter = shiftLetter(plainLetter, shiftAmount);
+				cipheredLetter = shiftLetter(shiftAmount, plainLetter);
 				cipheredText[i+j] = cipheredLetter;
 			}
 		}	
@@ -65,9 +65,7 @@ char* vigenereDecr(const char* key, const char* cipheredText) {
 }
 
 
-//ONE TIME PAD CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 char* oneTimePad(const int* key, const char* plainText) {
 	unsigned int textLength = strlen(plainText);
 	int shiftAmount;
@@ -78,7 +76,7 @@ char* oneTimePad(const int* key, const char* plainText) {
 	{
 		shiftAmount = key[i];
 		plainLetter = plainText[i];
-		cipheredLetter = shiftLetter(plainLetter, shiftAmount);
+		cipheredLetter = shiftLetter(shiftAmount, plainLetter);
 		cipheredText[i] = cipheredLetter;
 	}	
 	return cipheredText;
@@ -101,17 +99,12 @@ char* oneTimePadDecr(const int* key, const char* cipheredText) {
 }
 
 
-//PLAYFAIR CIPHER///////////////////////////////////////////////////////////////////////////////////////////////
-
-void playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2) {
-	// upperCase
-	*c1 = upperC(*c1);
-	*c2 = upperC(*c2);
-	
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+void playfairDigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2) {
 	// coordinates of the c1 and c2 in the matrix
 	int c1_r, c1_c, c2_r, c2_c;
-	findCharInMat(keyMat, *c1, &c1_r, &c1_c);
-	findCharInMat(keyMat, *c2, &c2_r, &c2_c);
+	findCharInKeyMat(keyMat, *c1, &c1_r, &c1_c);
+	findCharInKeyMat(keyMat, *c2, &c2_r, &c2_c);
 
 	if (c1_r == c2_r) {
 		if (c1_c == FIVE_COLUMNS-1 || encryptDecrypt == DECRYPTION) {
@@ -146,21 +139,21 @@ void playfairBigraphEncr(int encryptDecrypt, char** keyMat, char* c1, char* c2) 
 	}
 }
 
-char* playfairCipher(int encryptDecrypt, const char* key, const char* plainText) {
+char* playfair(int encryptDecrypt, const char* key, const char* plainText) {
 	unsigned int textLength = strlen(plainText);
 	char *cipheredText = (char*) malloc((textLength+1)*sizeof(char));
-	char **keyMat = keyMatGen(key, 'q');
+	char **keyMat = keyMatGen(key);
 	char c1 = '0', c2 = '0'; 
 	int i = 0, j = 0;
 
 	while(i<textLength) {
 		c1 = plainText[i];
-		if (!char_in_alphabets(c1)) {
+		if (!isAlphabet(c1)) {
 			cipheredText[i++] = c1;
 		} else {
 			j = i++; // j stocke l'indice de c1
-			while(!char_in_alphabets(c2 = plainText[i])) cipheredText[i++] = c2;
-			playfairBigraphEncr(encryptDecrypt, keyMat, &c1, &c2);
+			while(!isAlphabet(c2 = plainText[i])) cipheredText[i++] = c2;
+			playfairDigraphEncr(encryptDecrypt, keyMat, &c1, &c2);
 			cipheredText[j] = c1;
 			cipheredText[i++] = c2;
 		}
@@ -170,125 +163,131 @@ char* playfairCipher(int encryptDecrypt, const char* key, const char* plainText)
 }
 
 char* playfairEncr(const char* key, const char* plainText) {
-	return playfairCipher(ENCRYPTION, key, plainText);
+	return playfair(ENCRYPTION, key, plainText);
 }
 
 char* playfairDecr(const char* key, const char* cipheredText) {
-	return playfairCipher(DECRYPTION, key, cipheredText);
+	return playfair(DECRYPTION, key, cipheredText);
 }
 
 
-/*
-//FOUR SQUARE CIPHER////////////////////////////////////////////////////////////////////////////////////////////////
-void four_square_encrypt_bigraph(int encrypt_decrypt, char alphabet_matrix[][PLAYFAIR_R_C_SIZE], char key1[][PLAYFAIR_R_C_SIZE], char key2[][PLAYFAIR_R_C_SIZE], char* c1, char* c2) {	
-	int bigraph_coordinates_c1[BIGRAPH_SIZE];
-	int bigraph_coordinates_c2[BIGRAPH_SIZE];
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+void fourSquareDigraphEncr(key3Matrices keys, char *c1, char *c2) {
 	int c1_r, c1_c, c2_r, c2_c;
+	findCharInKeyMat(keys.alphabMat, *c1, &c1_r, &c1_c);
+	findCharInKeyMat(keys.alphabMat, *c2, &c2_r, &c2_c);	
 
-	if (encrypt_decrypt == ENCRYPTION)
-	{
-		char_matrix_coordinates(alphabet_matrix, *c1, bigraph_coordinates_c1);
-		char_matrix_coordinates(alphabet_matrix, *c2, bigraph_coordinates_c2);
+	*c1 = keys.keyMat1[c1_r][c2_c];
+	*c2 = keys.keyMat2[c2_r][c1_c];
+}
+
+void fourSquareDigraphDecr(key3Matrices keys, char *c1, char *c2) {
+	int c1_r, c1_c, c2_r, c2_c;
+	findCharInKeyMat(keys.keyMat1, *c1, &c1_r, &c1_c);
+	findCharInKeyMat(keys.keyMat2, *c2, &c2_r, &c2_c);	
+
+	*c1 = keys.alphabMat[c1_r][c2_c];
+	*c2 = keys.alphabMat[c2_r][c1_c];
+}
+
+char* fourSquare(int encryptDecrypt, const char* key1, const char* key2, const char* plainText) {
+	unsigned int textLength = strlen(plainText);
+	char *cipheredText      = (char*) malloc((textLength+1)*sizeof(char));
+
+	char **alphabMat  = alphabMatGen(key1);
+	char **keyMat1    = keyMatGen(key1);
+	char **keyMat2    = keyMatGen(key2);
+	key3Matrices keys  = {alphabMat, keyMat1, keyMat2};
+
+	char c1 = '0', c2 = '0'; 
+	int i = 0, j = 0;
+
+	while(i<textLength) {
+		c1 = plainText[i];
+		if (!isAlphabet(c1)) {
+			cipheredText[i++] = c1;
+		} else {
+			j = i++; // j stocke l'indice de c1
+			while(!isAlphabet(c2 = plainText[i])) cipheredText[i++] = c2;
+
+			if (encryptDecrypt == ENCRYPTION) {
+				fourSquareDigraphEncr(keys, &c1, &c2);	
+			} else {
+				fourSquareDigraphDecr(keys, &c1, &c2);	
+			}
+
+			cipheredText[j]   = c1;
+			cipheredText[i++] = c2;
+		}
+	}
+	free(keyMat1);
+	free(keyMat2);
+	free(alphabMat);
+	return cipheredText;	
+}
+
+char* fourSquareEncr(const char* key1, const char* key2, const char* plainText) {
+	return fourSquare(ENCRYPTION, key1, key2, plainText);
+}
+
+char* fourSquareDecr(const char* key1, const char* key2, const char* cipheredText) {
+	return fourSquare(DECRYPTION, key1, key2, cipheredText);
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+void  twoSquareDigraphEncr(key2Matrices keys, char *c1, char *c2) {
+	int c1_r, c1_c, c2_r, c2_c;
+	findCharInKeyMat(keys.keyMat1, *c1, &c1_r, &c1_c);
+	findCharInKeyMat(keys.keyMat2, *c2, &c2_r, &c2_c);
+	
+	// Ici on utilise la version verticale de cette méthode du cryptage
+	if(c1_c != c2_c) {		
+		*c1 = keys.keyMat1[c1_r][c2_c];
+		*c2 = keys.keyMat2[c2_r][c1_c];			
 	} else {
-		char_matrix_coordinates(key1, *c1, bigraph_coordinates_c1);
-		char_matrix_coordinates(key2, *c2, bigraph_coordinates_c2);		
+		*c1 = upperC(*c1);
+		*c2 = upperC(*c2);
 	}
-	c1_r = bigraph_coordinates_c1[0];
-	c1_c = bigraph_coordinates_c1[1];
-	c2_r = bigraph_coordinates_c2[0];
-	c2_c = bigraph_coordinates_c2[1];	
-
-	*c1 = alphabet_matrix[c1_r][c2_c];
-	*c2 = alphabet_matrix[c2_r][c1_c];
 }
 
-void four_square_cipher(int encrypt_decrypt, const char* key1_i, const char* key2_i, const char* original_text_i, char* processed_text, char except_c) {
-	char alphabet_matrix[PLAYFAIR_R_C_SIZE][PLAYFAIR_R_C_SIZE];	
-	char key1[strlen(key1_i)];
-	char key2[strlen(key2_i)];
-	char four_square_key1[PLAYFAIR_R_C_SIZE][PLAYFAIR_R_C_SIZE];
-	char four_square_key2[PLAYFAIR_R_C_SIZE][PLAYFAIR_R_C_SIZE];
-	unsigned int original_text_length = strlen(original_text_i);
-	char original_text[MAX_STR];
-	char c1, c2;
-	int c2_index, i = 0;
+char* twoSquare(const char* key1, const char* key2, const char* plainText) {
+	unsigned int textLength = strlen(plainText);
+	char *cipheredText      = (char*) malloc((textLength+1)*sizeof(char));
 
-    // pre-treatment
-	alphabet_matrix_generator(alphabet_matrix, except_c);	
-	strcpy(key1, key1_i);
-	strcpy(key2, key2_i);
-	strcpy(original_text, original_text_i);
-	matrix_key_generator(key1, four_square_key1, except_c);
-	matrix_key_generator(key2, four_square_key2, except_c);
-	lower_to_uppercase(original_text);
+	char **keyMat1     = keyMatGen(key1);
+	char **keyMat2     = keyMatGen(key2);
+	key2Matrices keys  = {keyMat1, keyMat2};
 
-	while(i<original_text_length) {
-		c1 = original_text[i];
-		c2_index = next_char(i, original_text);
-		if(!char_in_alphabets(c1) || !c2_index) {
-			processed_text[i] = original_text[i];
-			i++;
+	showMat(5, 5, keys.keyMat1);
+	showMat(5, 5, keys.keyMat2);
+
+	char c1 = '0', c2 = '0'; 
+	int i = 0, j = 0;
+
+	while(i<textLength) {
+		c1 = plainText[i];
+		if (!isAlphabet(c1)) {
+			cipheredText[i++] = c1;
 		} else {
-			c2 = original_text[c2_index];
-			four_square_encrypt_bigraph(encrypt_decrypt , alphabet_matrix, four_square_key1, four_square_key2, &c1, &c2);	
-			fill_blank_space(i+1, c2_index-1, processed_text);
-			processed_text[c2_index] = c2;
-			processed_text[i]        = c1;
-			i = c2_index+1;
+			j = i++; // j stocke l'indice de c1
+			while(!isAlphabet(c2 = plainText[i])) cipheredText[i++] = c2;
+
+			twoSquareDigraphEncr(keys, &c1, &c2);
+
+			cipheredText[j]   = c1;
+			cipheredText[i++] = c2;
 		}
 	}
+	free(keyMat1);
+	free(keyMat2);
+	return cipheredText;
 }
 
-//TWO SQUARES////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void two_square_encrypt_bigraph(char key1[][PLAYFAIR_R_C_SIZE], char key2[][PLAYFAIR_R_C_SIZE], char* c1, char* c2) {	
-	int bigraph_coordinates_c1[BIGRAPH_SIZE];
-	int bigraph_coordinates_c2[BIGRAPH_SIZE];
-	int c1_r, c1_c, c2_r, c2_c;
-
-	char_matrix_coordinates(key1, *c1, bigraph_coordinates_c1);
-	char_matrix_coordinates(key2, *c2, bigraph_coordinates_c2);		
-	c1_r = bigraph_coordinates_c1[0];
-	c1_c = bigraph_coordinates_c1[1];
-	c2_r = bigraph_coordinates_c2[0];
-	c2_c = bigraph_coordinates_c2[1];	
-
-	*c1 = key1[c1_r][c2_c];
-	*c2 = key2[c2_r][c1_c];
+char* twoSquareEncr(const char* key1, const char* key2, const char* plainText) {
+	return twoSquare(key1, key2, plainText);  
 }
 
-
-void two_square_cipher(const char* key1_i, const char* key2_i, const char* original_text_i, char* processed_text, char except_c) {
-	char key1[strlen(key1_i)];
-	char key2[strlen(key2_i)];
-	char two_square_key1[PLAYFAIR_R_C_SIZE][PLAYFAIR_R_C_SIZE];
-	char two_square_key2[PLAYFAIR_R_C_SIZE][PLAYFAIR_R_C_SIZE];
-	unsigned int original_text_length = strlen(original_text_i);
-	char original_text[MAX_STR];
-	char c1, c2;
-	int c2_index, i = 0;
-
-    // pre-treatment
-	strcpy(key1, key1_i);
-	strcpy(key2, key2_i);
-	strcpy(original_text, original_text_i);
-	matrix_key_generator(key1, two_square_key1, except_c);
-	matrix_key_generator(key2, two_square_key2, except_c);
-	lower_to_uppercase(original_text);
-
-	while(i<original_text_length) {
-		c1 = original_text[i];
-		c2_index = next_char(i, original_text);
-		if(!char_in_alphabets(c1) || !c2_index) {
-			processed_text[i] = original_text[i];
-			i++;
-		} else {
-			c2 = original_text[c2_index];
-			two_square_encrypt_bigraph(two_square_key1, two_square_key2, &c1, &c2);	
-			fill_blank_space(i+1, c2_index-1, processed_text);
-			processed_text[c2_index] = c2;
-			processed_text[i]        = c1;
-			i = c2_index+1;
-		}
-	}
+char* twoSquareDecr(const char* key1, const char* key2, const char* cipheredText) {
+	return twoSquare(key1, key2, cipheredText);  
 }
-*/
